@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Tanima!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff85a1;
+            --secondary: #fbb6ce;
+            --accent: #f6ad55;
+            --bg: #fff5f7;
+            --cake-bottom: #f8bbd0;
+            --cake-top: #fce4ec;
+            --frosting: #f06292;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg);
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .cursive {
+            font-family: 'Pacifico', cursive;
+        }
+
+        /* Balloon Animation */
+        .balloon {
+            position: absolute;
+            bottom: -150px;
+            width: 40px;
+            height: 60px;
+            border-radius: 50%;
+            z-index: 1;
+            animation: floatUp 8s linear forwards;
+            opacity: 0.8;
+        }
+
+        @media (min-width: 640px) {
+            .balloon {
+                width: 50px;
+                height: 70px;
+            }
+        }
+
+        .balloon::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            width: 1px;
+            height: 20px;
+            background: rgba(0,0,0,0.1);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-120vh) rotate(20deg); opacity: 0; }
+        }
+
+        /* --- RESPONSIVE CAKE DESIGN --- */
+        .cake-wrapper {
+            position: relative;
+            height: 220px;
+            width: 100%;
+            max-width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            margin: 0 auto;
+            /* Scale down slightly for very small screens */
+        }
+
+        @media (max-width: 360px) {
+            .cake-wrapper {
+                transform: scale(0.85);
+                height: 190px;
+            }
+        }
+
+        .plate {
+            width: 100%;
+            max-width: 260px;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 0 #bdbdbd;
+        }
+
+        .tier {
+            position: relative;
+            width: 180px;
+            height: 70px;
+            background: var(--cake-bottom);
+            border-radius: 12px 12px 0 0;
+            border: 3px solid #f48fb1;
+            box-shadow: inset 0 -8px 0 rgba(0,0,0,0.05);
+        }
+
+        .tier-top {
+            width: 120px;
+            height: 50px;
+            background: var(--cake-top);
+            border-radius: 10px 10px 0 0;
+            border: 3px solid #f8bbd0;
+            margin-bottom: -3px;
+            z-index: 2;
+        }
+
+        @media (min-width: 640px) {
+            .tier { width: 200px; height: 80px; }
+            .tier-top { width: 140px; height: 60px; }
+        }
+
+        .frosting-drip {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: var(--frosting);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .frosting-drip::after {
+            content: "";
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background: transparent;
+            background-image: radial-gradient(circle at 15px 0, var(--frosting) 15px, transparent 16px);
+            background-size: 30px 30px;
+        }
+
+        .sprinkles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .sprinkle {
+            position: absolute;
+            width: 3px;
+            height: 6px;
+            border-radius: 2px;
+        }
+
+        .candle {
+            position: absolute;
+            bottom: 115px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 40px;
+            background: repeating-linear-gradient(45deg, #fff, #fff 5px, #4fc3f7 5px, #4fc3f7 10px);
+            border-radius: 3px;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        @media (min-width: 640px) {
+            .candle { bottom: 135px; width: 14px; height: 45px; }
+        }
+
+        .flame {
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 20px;
+            background: radial-gradient(circle at center, #fff200, #ff9f00, #ff4d00);
+            border-radius: 50% 50% 20% 20%;
+            animation: flicker 0.1s infinite alternate;
+            box-shadow: 0 0 10px #ff9f00;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+            100% { transform: translateX(-50%) scale(1.1) rotate(2deg); opacity: 1; }
+        }
+
+        .candle.blown .flame { display: none; }
+
+        #canvas-confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        #surpriseCard {
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        #surpriseCard.show-card {
+            max-height: 500px;
+            opacity: 1;
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+        }
+
+        .gradient-text {
+            background: linear-gradient(45deg, #ff4081, #ff9100);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .wish-input {
+            border-bottom: 2px solid #f8bbd0;
+            transition: border-color 0.3s;
+            background: transparent;
+            text-align: center;
+        }
+        .wish-input:focus { border-color: #f06292; outline: none; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center px-4 py-8">
+
+    <canvas id="canvas-confetti"></canvas>
+
+    <div id="balloon-container" class="fixed inset-0 pointer-events-none overflow-hidden"></div>
+
+    <!-- Main Content -->
+    <div class="w-full max-w-sm sm:max-w-md text-center z-10 space-y-6 bg-white/80 backdrop-blur-xl p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl border border-white/50">
+        
+        <header class="space-y-3">
+            <h1 class="cursive text-4xl sm:text-5xl text-pink-500 animate-pulse">
+                Happy Birthday
+            </h1>
+            <h2 class="text-3xl sm:text-4xl font-bold gradient-text">
+                Tanima! ✨
+            </h2>
+        </header>
+
+        <!-- Cake Container -->
+        <div class="cake-wrapper">
+            <div class="candle" id="mainCandle" title="Blow the candle and make a wish!">
+                <div class="flame" id="flame"></div>
+            </div>
+            
+            <div class="tier tier-top">
+                <div class="frosting-drip"></div>
+                <div class="sprinkles" id="sprinkles-top"></div>
+            </div>
+            
+            <div class="tier">
+                <div class="frosting-drip"></div>
+                <div class="sprinkles" id="sprinkles-bottom"></div>
+            </div>
+            
+            <div class="plate"></div>
+            
+            <p id="instructionText" class="absolute -bottom-8 w-full text-pink-400 font-semibold text-xs sm:text-sm">
+                Tap the candle to blow! 🎂
+            </p>
+        </div>
+
+        <div class="pt-8">
+            <button id="surpriseBtn" class="w-full sm:w-auto bg-pink-500 hover:bg-pink-600 text-white font-bold py-4 px-8 sm:px-10 rounded-full shadow-lg transform transition active:scale-95 hover:scale-105 flex items-center justify-center space-x-2 mx-auto">
+                <span id="btnText">Open Your Card</span>
+                <svg id="btnIcon" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H4v4"/><path d="M12 20V8"/><path d="M20 12c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V8h16v4z"/><path d="M12 8l4-4"/><path d="M12 8L8 4"/></svg>
+            </button>
+        </div>
+
+        <div id="surpriseCard" class="bg-white rounded-2xl shadow-inner border-2 border-dashed border-pink-200">
+            <p class="text-gray-700 text-base sm:text-lg leading-relaxed">
+                Dear <span class="font-bold text-pink-600">Tanima</span>,<br><br>
+                May your day be filled with as much sweetness as this cake! You deserve all the happiness in the world. Enjoy your special day to the fullest! 🌸
+            </p>
+            <div class="mt-4 flex justify-center space-x-3">
+                <span class="text-2xl hover:rotate-12 transition cursor-default">🎁</span>
+                <span class="text-2xl hover:rotate-12 transition cursor-default">💖</span>
+                <span class="text-2xl hover:rotate-12 transition cursor-default">🍰</span>
+                <span class="text-2xl hover:rotate-12 transition cursor-default">🎉</span>
+            </div>
+        </div>
+
+        <footer class="text-pink-300 text-[10px] sm:text-xs mt-4 italic">
+            With love &bull; Happy Birthday Tanima
+        </footer>
+    </div>
+
+    <!-- Wish Modal Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-pink-900/40 backdrop-blur-md flex items-center justify-center z-[200] opacity-0 pointer-events-none transition-opacity duration-500">
+        <div class="bg-white p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] text-center shadow-2xl scale-75 transition-all duration-500 max-w-sm w-full mx-4" id="overlayContent">
+            <!-- Content set via JS -->
+        </div>
+    </div>
+
+    <script>
+        // Generate Sprinkles
+        function addSprinkles(containerId, count) {
+            const container = document.getElementById(containerId);
+            const sprinkleColors = ['#FFEB3B', '#FF4081', '#00E676', '#40C4FF', '#FFFFFF'];
+            for (let i = 0; i < count; i++) {
+                const s = document.createElement('div');
+                s.className = 'sprinkle';
+                s.style.backgroundColor = sprinkleColors[Math.floor(Math.random() * sprinkleColors.length)];
+                s.style.top = Math.random() * 80 + '%';
+                s.style.left = Math.random() * 92 + 2 + '%';
+                s.style.transform = `rotate(${Math.random() * 360}deg)`;
+                container.appendChild(s);
+            }
+        }
+        addSprinkles('sprinkles-top', 12);
+        addSprinkles('sprinkles-bottom', 20);
+
+        // Balloon System
+        const balloonContainer = document.getElementById('balloon-container');
+        const colors = ['#ff85a1', '#fbb6ce', '#f6ad55', '#7f9cf5', '#9f7aea', '#ff4081'];
+
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon';
+            balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            balloon.style.left = Math.random() * 85 + 5 + 'vw';
+            balloon.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            balloonContainer.appendChild(balloon);
+            setTimeout(() => balloon.remove(), 9000);
+        }
+        setInterval(createBalloon, 1500);
+
+        // Confetti System
+        const canvas = document.getElementById('canvas-confetti');
+        const ctx = canvas.getContext('2d');
+        let pieces = [];
+        let isAnimatingConfetti = false;
+
+        function updateCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', updateCanvasSize);
+        updateCanvasSize();
+
+        class ConfettiPiece {
+            constructor() { this.init(); }
+            init() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.rotation = Math.random() * 360;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.size = Math.random() * 6 + 5;
+                this.speed = Math.random() * 3 + 2;
+                this.osc = Math.random() * 1.5;
+            }
+            update() {
+                this.y += this.speed;
+                this.x += Math.sin(this.y / 40) * this.osc;
+                this.rotation += 2;
+                if (this.y > canvas.height) this.init();
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        function startConfetti() {
+            if (isAnimatingConfetti) return;
+            isAnimatingConfetti = true;
+            pieces = Array.from({ length: window.innerWidth < 640 ? 60 : 100 }, () => new ConfettiPiece());
+            function loop() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                pieces.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        // Interaction Logic
+        const mainCandle = document.getElementById('mainCandle');
+        const surpriseBtn = document.getElementById('surpriseBtn');
+        const surpriseCard = document.getElementById('surpriseCard');
+        const overlay = document.getElementById('overlay');
+        const overlayContent = document.getElementById('overlayContent');
+
+        function openWishModal() {
+            overlayContent.innerHTML = `
+                <div class="text-4xl mb-4">🌟</div>
+                <h3 class="cursive text-3xl text-pink-500 mb-2">Make a Wish</h3>
+                <p class="text-gray-500 text-xs sm:text-sm mb-6">Type your secret wish!</p>
+                <input type="text" id="wishInput" placeholder="I wish for..." class="wish-input w-full py-2 px-1 text-lg text-gray-700 mb-8 border-b-2 border-pink-200">
+                <button onclick="submitWish()" class="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-2xl font-bold shadow-md transform active:scale-95 transition">
+                    Send to the stars ✨
+                </button>
+            `;
+            overlay.classList.remove('pointer-events-none');
+            overlay.classList.add('opacity-100');
+            overlayContent.classList.remove('scale-75');
+            overlayContent.classList.add('scale-100');
+            
+            setTimeout(() => document.getElementById('wishInput').focus(), 600);
+        }
+
+        mainCandle.addEventListener('click', () => {
+            if (!mainCandle.classList.contains('blown')) {
+                mainCandle.classList.add('blown');
+                document.getElementById('instructionText').innerText = "Wish granted! ✨";
+                startConfetti();
+                setTimeout(openWishModal, 700);
+            }
+        });
+
+        surpriseBtn.addEventListener('click', () => {
+            surpriseCard.classList.add('show-card');
+            document.getElementById('btnText').innerText = "Happy Birthday!";
+            document.getElementById('btnIcon').style.display = 'none';
+            surpriseBtn.classList.replace('bg-pink-500', 'bg-green-500');
+            startConfetti();
+            
+            // Scroll to card smoothly
+            setTimeout(() => {
+                surpriseCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 500);
+        });
+
+        window.submitWish = function() {
+            overlayContent.innerHTML = `
+                <div class="text-4xl mb-4">✨</div>
+                <h3 class="cursive text-3xl text-pink-500 mb-2">Beautiful!</h3>
+                <p class="text-gray-600 text-sm mb-8 px-2">Your wish is safe with the universe. Have a magical day!</p>
+                <button onclick="closeOverlay()" class="w-full bg-pink-500 text-white py-3 rounded-2xl font-bold shadow-md">Back to Party</button>
+            `;
+        };
+
+        window.closeOverlay = function() {
+            overlay.classList.add('opacity-0');
+            overlay.classList.add('pointer-events-none');
+            overlay.classList.remove('opacity-100');
+        };
+
+        for(let i=0; i<3; i++) setTimeout(createBalloon, i*400);
+    </script>
+</body>
+</html>
